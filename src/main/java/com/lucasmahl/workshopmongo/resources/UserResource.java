@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,5 +44,15 @@ public class UserResource {
 		return ResponseEntity.ok().body(listDto);// ok é o metodo q irá instancia o ResponseEntity, já com o código de
 												// resposta http, de sucesso
 												//body pra definir qual será o corpo da resposta
+	}
+	
+	//metodo q ira retornar o userdto, do findById
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)//o caminho será users/{id}, tmbm será get
+	public ResponseEntity<UserDTO> findById(@PathVariable String id) {//@PathVariable pra falar q o id passado tem q casar com id do caminho
+
+		User obj = service.findById(id);
+		
+
+		return ResponseEntity.ok().body(new UserDTO(obj));//obj convertido pra userDTo
 	}
 }
