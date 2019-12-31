@@ -1,14 +1,17 @@
 package com.lucasmahl.workshopmongo.resources;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.lucasmahl.workshopmongo.domain.User;
 import com.lucasmahl.workshopmongo.dto.UserDTO;
@@ -52,7 +55,19 @@ public class UserResource {
 
 		User obj = service.findById(id);
 		
-
 		return ResponseEntity.ok().body(new UserDTO(obj));//obj convertido pra userDTo
+	}
+	
+	//endpoint pra inserir novo usuário
+	@RequestMapping(method = RequestMethod.POST)//o caminho será /users, porém é post //@RequestMapping(method = RequestMethod.POST) = @postmapping
+	public ResponseEntity<Void> insert(@RequestBody UserDTO objDto) {//Void pq a inserção retornará um objeto vazio //@RequestBody pra q o endpoint aceite o objeto
+
+		User obj = service.fromDTO(objDto); //converte objDto pra usuário
+		obj = service.insert(obj);
+		
+		//retorna uma resposta vazia, mas com cabeçalho com a url do novo recurso criado, como boa prática
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+
+		return ResponseEntity.created(uri).build(); //created retorna o cód 201, de resposta http, qndo é criado um novo recurso
 	}
 }
