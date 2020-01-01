@@ -77,4 +77,15 @@ public class UserResource {
 		//qndo uma operação não tem q retornar nada, será uma operação com o cód. 204, usando .noContent().build()
 		return ResponseEntity.noContent().build();
 	}
+	
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	public ResponseEntity<Void> update(@RequestBody UserDTO objDto, @PathVariable String id) {
+
+		User obj = service.fromDTO(objDto);
+		obj.setId(id);//pra garantir q o objeto terá o id da requisição
+		obj = service.update(obj);
+		
+		return ResponseEntity.noContent().build();
+
+	}
 }

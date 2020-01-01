@@ -38,6 +38,19 @@ public class UserService {
 		}		
 	}
 	
+	public User update(User obj) {
+		User newObj = repo.findById(obj.getId()).get();
+
+		updateData(newObj, obj);
+		
+		return repo.save(newObj);
+	}
+	
+	private void updateData(User newObj, User obj) {
+		newObj.setName(obj.getName());
+		newObj.setEmail(obj.getEmail());
+	}
+
 	//metodo q irá pegar o DTO e instanciar o usuário
 	public User fromDTO(UserDTO objDTO) {
 		return new User(objDTO.getId(), objDTO.getName(), objDTO.getEmail());		
