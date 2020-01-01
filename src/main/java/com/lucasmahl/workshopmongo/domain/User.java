@@ -1,8 +1,11 @@
 package com.lucasmahl.workshopmongo.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "user") //pra informar ao Spring que se trata de uma coleção do MongoDB
@@ -13,7 +16,11 @@ public class User implements Serializable {
 	private String id;
 	private String name;
 	private String email;
-
+	
+	//lazy = true, pra não carregar automaticamente, qndo for recuperado os usuários, posts só serão carregados se forem explicitamente acessados
+	@DBRef(lazy = true) //pra informar q faz referencia a outra coleção do mongodb
+	private List<Post> posts = new ArrayList<>();//List é interface, e arraylist é uma implementação possivel desta lista
+	
 	public User() {
 
 	}
@@ -49,6 +56,14 @@ public class User implements Serializable {
 		this.email = email;
 	}
 
+	public List<Post> getPosts() {
+		return posts;
+	}
+
+	public void setPosts(List<Post> posts) {
+		this.posts = posts;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -73,5 +88,7 @@ public class User implements Serializable {
 			return false;
 		return true;
 	}
+
+
 
 }
