@@ -24,12 +24,18 @@ public class UserService {
 	
 	public User findById(String id) {
 		Optional<User> obj = repo.findById(id);
-		return obj.orElseThrow(() -> new ObjectNotFoundException("Id: " + id + " não encontrado"));
+		return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado"));
 	}
 	
 	//metodo pra inserir usuário
 	public User insert(User obj) {//User pq ele irá retornar o objeto inserido		
 		return repo.insert(obj);
+	}
+	
+	public void delete(String id) {
+		if(!(findById(id)==null)) {
+			repo.deleteById(id);
+		}		
 	}
 	
 	//metodo q irá pegar o DTO e instanciar o usuário

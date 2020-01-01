@@ -70,4 +70,11 @@ public class UserResource {
 
 		return ResponseEntity.created(uri).build(); //created retorna o cód 201, de resposta http, qndo é criado um novo recurso
 	}
+	
+	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<Void> delete(@PathVariable String id) {
+		service.delete(id);
+		//qndo uma operação não tem q retornar nada, será uma operação com o cód. 204, usando .noContent().build()
+		return ResponseEntity.noContent().build();
+	}
 }
