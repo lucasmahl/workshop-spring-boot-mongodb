@@ -1,5 +1,6 @@
 package com.lucasmahl.workshopmongo.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -16,5 +17,9 @@ public interface PostRepository extends MongoRepository<Post, String> {// MongoR
 	List<Post> searchTitle(String text);
 	
 	//retorna lista de post q contenha no titulo a String informada na busca
-	List<Post> findByTitleContainingIgnoreCase(String text);//IgnoreCase pra não ser casesensitive
+	//List<Post> findByTitleContainingIgnoreCase(String text);//IgnoreCase pra não ser casesensitive
+	
+	//pesquisa q contenha a string no titulo, corpo do post ou nos comentários
+	@Query("{ $and: [ { date: {$gte: ?1} }, { date: { $lte: ?2} } , { $or: [ { 'title': { $regex: ?0, $options: 'i' } }, { 'body': { $regex: ?0, $options: 'i' } }, { 'comments.text': { $regex: ?0, $options: 'i' } } ] } ] }") //@Query pra especificar a consulta //$gte = greaterOrEqual
+	List<Post> fullSearch(String text, Date minDate, Date maxDate);
 }
